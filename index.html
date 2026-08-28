@@ -8,6 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" content="#f2f2f7">
+    <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="https://i.hd-r.cn/e733e475-4b60-450a-868b-5e57977c9c65.png">
     <link rel="icon" type="image/png" href="https://i.hd-r.cn/e733e475-4b60-450a-868b-5e57977c9c65.png">
     <style>
@@ -28,6 +29,8 @@
             padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 80px);
             max-width: 640px; margin: 0 auto;
         }
+
+        /* 导航栏 */
         .nav-bar {
             position: fixed; top: 0; left: 0; right: 0;
             height: calc(env(safe-area-inset-top, 0px) + 54px);
@@ -44,6 +47,8 @@
             font-size: 18px; color: var(--blue); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s;
         }
         .nav-btn:active { background: rgba(0,0,0,0.06); }
+
+        /* 菜单 */
         .menu-sheet {
             position: fixed; top: calc(env(safe-area-inset-top, 0px) + 54px); right: 12px;
             background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -55,6 +60,8 @@
         .menu-item:active { background: var(--gray5); }
         .menu-item.danger { color: var(--red); }
         .menu-sep { height: 0.5px; background: var(--gray5); margin: 4px 8px; }
+
+        /* 搜索框 */
         .search-wrap { margin-bottom: 12px; }
         .search-container { position: relative; }
         .search-box {
@@ -64,6 +71,8 @@
         .search-box::placeholder { color: var(--gray2); }
         .search-box:focus { outline: none; background: #fff; box-shadow: 0 0 0 2px rgba(0,122,255,0.3); }
         .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--gray2); font-size: 14px; }
+
+        /* 筛选区 */
         .filter-group { background: var(--card); border-radius: 14px; padding: 12px 14px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
         .filter-row { display: flex; gap: 8px; margin-bottom: 10px; }
         .filter-select {
@@ -82,6 +91,8 @@
         .filter-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; align-items: center; }
         .filter-chip { padding: 3px 9px; background: rgba(0,122,255,0.1); color: var(--blue); border-radius: 6px; font-size: 12px; font-weight: 500; }
         .clear-btn { margin-left: auto; background: none; border: none; color: var(--blue); font-size: 13px; font-weight: 500; cursor: pointer; }
+
+        /* 店铺卡片 */
         .shop-card { background: var(--card); border-radius: 16px; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); transition: transform 0.15s; position: relative; }
         .shop-card:active { transform: scale(0.99); }
         .shop-card.visited { background: linear-gradient(180deg, #f5fff7 0%, #ffffff 40%); }
@@ -97,14 +108,17 @@
         .badge.visited { background: rgba(52,199,89,0.12); color: var(--green); }
         .badge.seed { background: var(--gray6); color: var(--gray); }
         .badge.friend { background: rgba(175,82,222,0.12); color: var(--purple); }
+
         .rating-row { display: flex; align-items: center; gap: 4px; margin: 8px 0; }
         .star { font-size: 16px; color: var(--gray4); cursor: pointer; transition: transform 0.15s; display: inline-block; }
         .star.active { color: #ffcc00; }
         .star:active { transform: scale(1.3); }
         .rating-text { margin-left: 6px; font-size: 13px; color: var(--orange); font-weight: 600; }
+
         .tag-row { display: flex; flex-wrap: wrap; gap: 5px; margin: 6px 0; }
         .tag { padding: 2px 8px; background: var(--gray6); color: var(--text2); border-radius: 5px; font-size: 12px; font-weight: 500; }
         .desc-text { font-size: 14px; color: var(--text2); line-height: 1.5; margin: 6px 0; }
+
         .dish-section { background: var(--gray6); border-radius: 10px; padding: 8px 10px; margin: 8px 0; }
         .dish-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 13px; }
         .dish-img { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; cursor: pointer; transition: transform 0.2s; }
@@ -112,6 +126,7 @@
         .dish-name { flex: 1; color: var(--text2); }
         .dish-price { color: var(--orange); font-weight: 600; font-size: 12px; }
         .more-dish { font-size: 12px; color: var(--gray); padding: 3px 0; }
+
         .btn-row { display: flex; gap: 8px; margin-top: 10px; }
         .btn {
             flex: 1; height: 38px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600;
@@ -123,10 +138,12 @@
         .btn.orange { background: var(--orange); color: #fff; }
         .btn.gray { background: var(--gray6); color: var(--text2); }
         .btn.outline { background: #fff; border: 1px solid var(--gray5); color: var(--text2); }
+
         .action-bar { display: flex; gap: 4px; margin-top: 8px; padding-top: 8px; border-top: 0.5px solid var(--gray5); }
         .action-btn { flex: 1; height: 30px; border: none; background: transparent; font-size: 12px; color: var(--gray); font-weight: 500; cursor: pointer; border-radius: 6px; transition: background 0.1s; }
         .action-btn:active { background: var(--gray6); }
         .action-btn.danger { color: var(--red); }
+
         .fab {
             position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); right: 20px;
             width: 52px; height: 52px; border-radius: 50%; background: var(--blue); color: #fff; font-size: 24px;
@@ -134,6 +151,8 @@
             display: flex; align-items: center; justify-content: center; transition: transform 0.2s;
         }
         .fab:active { transform: scale(0.88) rotate(90deg); }
+
+        /* 弹窗 */
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
             display: flex; align-items: flex-end; justify-content: center; z-index: 200; animation: fadeIn 0.2s ease;
@@ -146,15 +165,22 @@
         }
         @keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .modal-handle { width: 36px; height: 5px; background: var(--gray4); border-radius: 3px; margin: 0 auto 16px; }
+
+        /* 分步引导 */
         .step-header { margin-bottom: 20px; }
         .step-progress { display: flex; justify-content: center; gap: 8px; margin-bottom: 16px; }
-        .step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gray4); transition: all 0.3s; }
+        .step-dot {
+            width: 8px; height: 8px; border-radius: 50%; background: var(--gray4); transition: all 0.3s;
+        }
         .step-dot.active { width: 24px; border-radius: 4px; background: var(--blue); }
         .step-dot.done { background: var(--green); }
         .step-title { font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 6px; }
         .step-subtitle { font-size: 14px; color: var(--text3); text-align: center; margin-bottom: 20px; }
+
         .step-content { min-height: 200px; animation: stepFade 0.3s ease; }
         @keyframes stepFade { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* 状态选择大卡片 */
         .status-cards { display: flex; flex-direction: column; gap: 12px; }
         .status-card {
             padding: 18px; border-radius: 14px; border: 2px solid var(--gray5); background: var(--gray6);
@@ -170,6 +196,8 @@
         .status-desc { font-size: 13px; color: var(--text3); }
         .status-check { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--gray4); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; }
         .status-card.selected .status-check { background: var(--blue); border-color: var(--blue); color: #fff; font-size: 14px; }
+
+        /* 表单 */
         .form-group { margin-bottom: 16px; }
         .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 6px; margin-left: 2px; }
         .form-input, .form-textarea, .form-select {
@@ -180,12 +208,17 @@
         .form-textarea { height: auto; padding: 10px 14px; resize: none; font-family: inherit; }
         .form-row { display: flex; gap: 10px; }
         .form-row .form-group { flex: 1; }
+
         .rec-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: -8px 0 16px; }
         .rec-tag { padding: 6px 12px; background: var(--gray6); border: none; border-radius: 7px; font-size: 13px; color: var(--text2); font-weight: 500; cursor: pointer; transition: all 0.1s; }
         .rec-tag:active { background: var(--gray5); transform: scale(0.96); }
+
+        /* 菜品表单 */
         .dish-form { background: var(--gray6); border-radius: 10px; padding: 12px; margin-bottom: 10px; }
         .add-dish-btn { width: 100%; height: 40px; border: 1px dashed var(--gray4); background: transparent; border-radius: 10px; font-size: 14px; color: var(--gray); font-weight: 500; cursor: pointer; transition: all 0.15s; }
         .add-dish-btn:active { background: var(--gray6); border-color: var(--gray3); transform: scale(0.99); }
+
+        /* 底部按钮 */
         .step-footer { display: flex; gap: 10px; margin-top: 24px; }
         .step-btn { flex: 1; height: 48px; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
         .step-btn:active { transform: scale(0.97); }
@@ -193,8 +226,18 @@
         .step-btn.next { background: var(--blue); color: #fff; }
         .step-btn.next:disabled { background: var(--gray4); color: #fff; cursor: not-allowed; }
         .step-btn.skip { background: transparent; color: var(--blue); }
+
+        /* 完成页 */
+        .complete-page { text-align: center; padding: 30px 0; }
+        .complete-icon { width: 72px; height: 72px; border-radius: 50%; background: rgba(52,199,89,0.15); display: flex; align-items: center; justify-content: center; font-size: 36px; margin: 0 auto 20px; animation: bounceIn 0.5s ease; }
+        @keyframes bounceIn { 0% { transform: scale(0); } 60% { transform: scale(1.15); } 100% { transform: scale(1); } }
+        .complete-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+        .complete-desc { font-size: 15px; color: var(--text3); margin-bottom: 24px; }
+
+        /* 其他弹窗 */
         .modal-title { font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 4px; }
         .modal-sub { font-size: 13px; color: var(--text3); text-align: center; margin-bottom: 18px; }
+
         .visit-bar { display: flex; align-items: center; justify-content: space-between; background: var(--gray6); border-radius: 12px; padding: 12px 14px; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
         .visit-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
         .visit-pill { padding: 5px 11px; border-radius: 7px; font-size: 12px; font-weight: 600; }
@@ -208,15 +251,21 @@
         .count-num.bump { animation: numBump 0.3s ease; }
         @keyframes numBump { 0% { transform: scale(1); } 50% { transform: scale(1.4); color: var(--orange); } 100% { transform: scale(1); } }
         .count-unit { font-size: 13px; color: var(--text3); font-weight: 500; }
+
         .empty { text-align: center; padding: 60px 20px; color: var(--gray); }
         .empty-icon { font-size: 42px; margin-bottom: 12px; opacity: 0.5; }
         .empty-text { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
         .empty-sub { font-size: 13px; opacity: 0.7; }
+
         .hl { background: #fff3cd; padding: 0 2px; border-radius: 2px; }
+
         .img-preview { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 300; animation: fadeIn 0.2s; }
         .img-preview img { max-width: 92%; max-height: 88%; border-radius: 12px; }
+
         .toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.8); color: #fff; padding: 12px 22px; border-radius: 12px; font-size: 14px; font-weight: 500; z-index: 500; animation: toastIn 0.2s; }
         @keyframes toastIn { from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+
+        /* 庆祝特效 */
         .celebrate-overlay {
             position: fixed; inset: 0; z-index: 600; display: flex; align-items: center; justify-content: center;
             background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -241,6 +290,8 @@
             color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; transition: transform 0.15s;
         }
         .celebrate-btn:active { transform: scale(0.96); }
+
+        /* 撒花粒子 */
         .confetti {
             position: fixed; width: 10px; height: 10px; top: -20px; z-index: 599;
             animation: confettiFall linear forwards; pointer-events: none;
@@ -249,12 +300,16 @@
             0% { transform: translateY(0) rotate(0deg); opacity: 1; }
             100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
         }
+
+        /* 星星闪烁动画 */
         .star.sparkle { animation: starSparkle 0.4s ease; }
         @keyframes starSparkle {
             0% { transform: scale(1); filter: brightness(1); }
             50% { transform: scale(1.5); filter: brightness(1.5) drop-shadow(0 0 8px #ffcc00); }
             100% { transform: scale(1); filter: brightness(1); }
         }
+
+        /* 真爱店解锁提示 */
         .love-unlock {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: linear-gradient(135deg, #fff5e6, #ffe8cc); border: 2px solid var(--orange);
@@ -274,6 +329,7 @@
         <div class="nav-title">🍜 食迹</div>
         <button class="nav-btn" onclick="haptic();toggleMenu()">⋯</button>
     </div>
+
     <div class="menu-sheet" id="menuSheet">
         <div class="menu-item" onclick="haptic();exportJson()">📤 导出备份</div>
         <div class="menu-item" onclick="haptic();document.getElementById('importFile').click()">📥 导入备份</div>
@@ -283,12 +339,14 @@
         <div class="menu-item" onclick="haptic();showAbout()">ℹ️ 关于食迹</div>
     </div>
     <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJson(this.files[0])">
+
     <div class="search-wrap">
         <div class="search-container">
             <span class="search-icon">🔍</span>
             <input type="text" class="search-box" id="searchInput" placeholder="搜索店铺、标签、地址、理由" oninput="renderList()">
         </div>
     </div>
+
     <div class="filter-group">
         <div class="filter-row">
             <select class="filter-select" id="categoryFilter" onchange="haptic();renderList()">
@@ -314,8 +372,11 @@
         <div class="city-scroll" id="cityTags"></div>
         <div class="filter-chips" id="filterChips"></div>
     </div>
+
     <div id="listWrap"></div>
     <button class="fab" onclick="haptic();openAddModal()">+</button>
+
+    <!-- 分步引导新增弹窗 -->
     <div class="modal-overlay" id="addModal" style="display:none;" onclick="if(event.target===this)closeAddModal()">
         <div class="modal-sheet">
             <div class="modal-handle"></div>
@@ -328,6 +389,8 @@
             <div class="step-footer" id="stepFooter"></div>
         </div>
     </div>
+
+    <!-- 打卡详情弹窗 -->
     <div class="modal-overlay" id="detailModal" style="display:none;" onclick="if(event.target===this)closeDetailModal()">
         <div class="modal-sheet">
             <div class="modal-handle"></div>
@@ -363,6 +426,8 @@
             </div>
         </div>
     </div>
+
+    <!-- 好友分享导入 -->
     <div class="modal-overlay" id="friendModal" style="display:none;" onclick="if(event.target===this)closeFriendModal()">
         <div class="modal-sheet">
             <div class="modal-handle"></div>
@@ -382,13 +447,15 @@
             </div>
         </div>
     </div>
+
+    <!-- 关于弹窗 -->
     <div class="modal-overlay" id="aboutModal" style="display:none;" onclick="if(event.target===this)closeAbout()">
         <div class="modal-sheet" style="text-align:center;">
             <div class="modal-handle"></div>
             <div class="modal-title">🍜 食迹</div>
             <img src="https://i.hd-r.cn/e733e475-4b60-450a-868b-5e57977c9c65.png" style="width:72px;height:72px;border-radius:18px;margin:14px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1);">
             <p style="color:var(--text2);font-size:14px;margin-bottom:6px;">记录每一次美食探店</p>
-            <p style="color:var(--gray);font-size:12px;margin-top:14px;">版本 v2.2.2 · iOS Style</p>
+            <p style="color:var(--gray);font-size:12px;margin-top:14px;">版本 v2.3.0 · iOS Style</p>
             <p style="color:var(--gray);font-size:12px;" id="recordCount">共 0 条记录</p>
             <p style="color:var(--gray);font-size:12px;">数据保存在本地，请定期导出备份</p>
             <div class="btn-row" style="margin-top:20px;">
@@ -397,22 +464,29 @@
             </div>
         </div>
     </div>
+
     <div class="img-preview" id="imgModal" style="display:none;" onclick="closeImgModal()">
         <img id="imgModalSrc">
     </div>
+
 <script>
 const STORAGE_KEY = "my_food_collection";
-const VERSION = "v2.2.2";
+const VERSION = "v2.3.0";
 let currentEditId = null, currentDetailId = null, dishForms = [];
 let currentStep = 1;
 let formData = { status: 'seed', city: '', shopName: '', category: '正餐', customCategory: '', address: '', tags: '', desc: '', evaluate: '', dishes: [] };
+
+// 触感反馈
 function haptic(level = 'light') {
     if (navigator.vibrate) {
         const patterns = { light: 8, medium: 15, heavy: 25, success: [10, 30, 10], error: [20, 50, 20] };
         navigator.vibrate(patterns[level] || 8);
     }
 }
+
 function toast(msg){ const t=document.createElement('div'); t.className='toast'; t.innerText=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),1800); }
+
+// 撒花特效
 function launchConfetti() {
     const colors = ['#ff3b30', '#ff9500', '#ffcc00', '#34c759', '#007aff', '#af52de', '#ff2d55'];
     const emojis = ['🎉', '✨', '🌟', '💫', '🎊', '⭐'];
@@ -438,6 +512,8 @@ function launchConfetti() {
         }, i * 30);
     }
 }
+
+// 第一次打卡庆祝
 function showCelebrate(shopName) {
     launchConfetti();
     haptic('success');
@@ -448,12 +524,17 @@ function showCelebrate(shopName) {
             <div class="celebrate-emoji">🎉</div>
             <div class="celebrate-title">首次打卡成功！</div>
             <div class="celebrate-desc">「${shopName}」已加入你的美食地图<br>继续探索更多美味吧～</div>
-            <button class="celebrate-btn">太棒了！</button>
+            <button class="celebrate-btn" onclick="this.closest('.celebrate-overlay').remove()">太棒了！</button>
         </div>
     `;
     document.body.appendChild(overlay);
-    overlay.querySelector('.celebrate-btn').onclick = () => { haptic(); overlay.remove(); };
+    overlay.querySelector('.celebrate-btn').onclick = () => {
+        haptic();
+        overlay.remove();
+    };
 }
+
+// 真爱店解锁
 function showLoveUnlock() {
     haptic('success');
     const el = document.createElement('div');
@@ -463,6 +544,7 @@ function showLoveUnlock() {
     setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity 0.5s'; }, 1500);
     setTimeout(() => el.remove(), 2100);
 }
+
 function getList(){
     try {
         const arr = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
@@ -475,8 +557,11 @@ function getList(){
 }
 function saveList(a){ localStorage.setItem(STORAGE_KEY, JSON.stringify(a)); }
 function hl(text, kw){ if(!kw||!text) return text; const reg=new RegExp(`(${kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'); return text.replace(reg,'<span class="hl">$1</span>'); }
+
 function toggleMenu(){ const m=document.getElementById('menuSheet'); m.style.display=m.style.display==='none'?'block':'none'; }
 document.addEventListener('click', e => { if(!e.target.closest('.nav-bar')&&!e.target.closest('.menu-sheet')) document.getElementById('menuSheet').style.display='none'; });
+
+/* ========== 分步引导新增 ========== */
 function openAddModal(){
     currentEditId = null;
     currentStep = 1;
@@ -485,6 +570,7 @@ function openAddModal(){
     renderStep();
     document.getElementById('addModal').style.display = 'flex';
 }
+
 function editFood(id){
     const it = getList().find(x=>x.id===id);
     if(!it) return;
@@ -501,14 +587,18 @@ function editFood(id){
     renderStep();
     document.getElementById('addModal').style.display = 'flex';
 }
+
 function closeAddModal(){ document.getElementById('addModal').style.display = 'none'; }
+
 function renderStep(){
     const prog = document.getElementById('stepProgress');
     prog.innerHTML = [1,2,3].map(i => `<div class="step-dot ${i===currentStep?'active':''} ${i<currentStep?'done':''}"></div>`).join('');
+
     const title = document.getElementById('stepTitle');
     const subtitle = document.getElementById('stepSubtitle');
     const content = document.getElementById('stepContent');
     const footer = document.getElementById('stepFooter');
+
     if(currentStep === 1){
         title.innerText = '这家店你去过了吗？';
         subtitle.innerText = '选择一个状态，我们会根据状态调整后续步骤';
@@ -615,11 +705,14 @@ function renderStep(){
         renderDishForms();
     }
 }
+
 function renderCustomCategory(){
     const g = document.getElementById('customCategoryGroup');
     if(g) g.style.display = formData.category === 'custom' ? 'block' : 'none';
 }
+
 function selectStatus(s){ formData.status = s; renderStep(); }
+
 function nextStep(){
     if(currentStep === 1){
         currentStep = 2;
@@ -639,13 +732,16 @@ function nextStep(){
         renderStep();
     }
 }
+
 function prevStep(){
     if(currentStep > 1){
         currentStep--;
         renderStep();
     }
 }
+
 function skipAndSave(){ saveFood(true); }
+
 function showRecommendTags(){
     const name = formData.shopName;
     const cat = formData.category === 'custom' ? formData.customCategory : formData.category;
@@ -663,11 +759,13 @@ function showRecommendTags(){
     const el = document.getElementById('recommendTags');
     if(el) el.innerHTML = recs.length ? recs.map(t=>`<button class="rec-tag" onclick="haptic();addRecTag('${t}')">+ ${t}</button>`).join('') : '';
 }
+
 function addRecTag(t){
     formData.tags = formData.tags.trim() ? formData.tags.trim()+','+t : t;
     const el = document.getElementById('stepTags');
     if(el) el.value = formData.tags;
 }
+
 function addDishForm(){ dishForms.push({name:'',price:'',reason:'',image:''}); renderDishForms(); }
 function removeDishForm(i){ haptic(); dishForms.splice(i,1); renderDishForms(); }
 function renderDishForms(){
@@ -709,6 +807,7 @@ function handleDishImg(i, file){
     };
     r.readAsDataURL(file);
 }
+
 function autoFillAddress(){
     if(!formData.city.trim()||!formData.shopName.trim()){ haptic('error'); toast('请先填写城市和店铺名'); return; }
     formData.address = `${formData.city} ${formData.shopName}`;
@@ -717,6 +816,7 @@ function autoFillAddress(){
     window.open(`https://maps.apple.com/?q=${encodeURIComponent(formData.city+' '+formData.shopName)}`,'_blank');
     toast('已打开地图，复制地址回来粘贴');
 }
+
 function saveFood(skip=false){
     if(!formData.shopName.trim() || !formData.city.trim()){ haptic('error'); toast('请填写店铺名称和城市'); return; }
     const finalCategory = formData.category === 'custom' ? formData.customCategory.trim() : formData.category;
@@ -749,16 +849,50 @@ function saveFood(skip=false){
         toast(currentEditId ? '✅ 已保存修改' : '✅ 添加成功');
     }
 }
+
+/* ========== 其他功能 ========== */
 function delItem(id){ haptic(); if(!confirm('确定删除这条记录吗？')) return; saveList(getList().filter(x=>x.id!==id)); renderList(); toast('已删除'); }
 function openMapNavi(addr,shop,city){ haptic(); const q=addr||`${city} ${shop}`; if(!q){toast('没有地址信息');return;} window.open(`https://maps.apple.com/?q=${encodeURIComponent(q)}`,'_blank'); }
 function shareItem(id){
     haptic();
     const it = getList().find(x=>x.id===id); if(!it) return;
-    const text = `【食迹分享】\n🍜 ${it.shopName}\n📍 ${it.city}${it.address?' · '+it.address:''}\n🏷️ 类别：${it.category}\n${it.tags&&it.tags.length?'标签：'+it.tags.join('、')+'\n':''}${it.desc?'推荐理由：'+it.desc+'\n':''}${it.visitCount>0?`✅ 已打卡${it.visitCount}次，评分${it.score}星`:'🌱 种草收藏'}`;
-    if(navigator.share) navigator.share({title:'食迹分享',text}).catch(()=>{});
-    else navigator.clipboard.writeText(text).then(()=>toast('分享文本已复制'));
+    const shareData = { shopName: it.shopName, city: it.city, address: it.address||'', category: it.category, tags: it.tags||[], desc: it.desc||'', dishes: it.dishes||[] };
+    const encoded = btoa(encodeURIComponent(JSON.stringify(shareData)));
+    const shareUrl = location.origin + location.pathname + '?share=' + encoded;
+    if(navigator.share) {
+        navigator.share({title:'食迹分享 - '+it.shopName, text:'我在食迹发现了一家好店，快来看看！', url: shareUrl}).catch(()=>{});
+    } else {
+        navigator.clipboard.writeText(shareUrl).then(()=>toast('分享链接已复制，发给好友即可'));
+    }
+}
+function importFromUrl(){
+    const params = new URLSearchParams(location.search);
+    const shareParam = params.get('share');
+    if(!shareParam) return false;
+    try {
+        const data = JSON.parse(decodeURIComponent(atob(shareParam)));
+        const arr = getList();
+        const exist = arr.find(s=>s.shopName===data.shopName && s.city===data.city);
+        if(exist) {
+            if(confirm(`已存在「${data.shopName}」，仍要导入吗？`)) {
+                arr.push({id:Date.now(), ...data, source:'friend', friendName:'好友分享', isCheckIn:false, visitCount:0, score:0, evaluate:''});
+                saveList(arr); renderList(); toast('✅ 导入成功');
+            }
+        } else {
+            if(confirm(`好友分享了一家店：「${data.shopName}」（${data.city}），是否导入？`)) {
+                arr.push({id:Date.now(), ...data, source:'friend', friendName:'好友分享', isCheckIn:false, visitCount:0, score:0, evaluate:''});
+                saveList(arr); renderList(); toast('✅ 导入成功');
+            }
+        }
+        history.replaceState({}, '', location.pathname);
+        return true;
+    } catch(e) {
+        console.error('分享链接解析失败', e);
+        return false;
+    }
 }
 function convertToMine(id){ haptic(); const arr=getList(); const it=arr.find(x=>x.id===id); if(!it)return; it.source='myself'; it.friendName=''; saveList(arr); renderList(); toast('已转为我的收藏'); }
+
 function showDetail(id){
     haptic();
     const it = getList().find(x=>x.id===id); if(!it) return;
@@ -781,6 +915,7 @@ function updateDetailUI(){
     stars.innerHTML = '';
     for(let i=1;i<=5;i++){ const s=document.createElement('span'); s.className='star'+(it.score>=i?' active':''); s.innerText='★'; s.onclick=()=>{ haptic(); setScore(i, s); }; stars.appendChild(s); }
     const st = document.createElement('span'); st.className='rating-text'; st.innerText = it.score>0 ? it.score+'.0' : '未评分'; stars.appendChild(st);
+    // 菜品列表
     const dishesGroup = document.getElementById('detailDishesGroup');
     const dishesEl = document.getElementById('detailDishes');
     if(it.dishes && it.dishes.length){
@@ -807,13 +942,16 @@ function adjustCount(d){
     it.visitCount=Math.max(0,it.visitCount+d);
     it.isCheckIn=it.visitCount>0;
     saveList(arr);
+    // 数字弹跳动画
     const numEl = document.getElementById('detailCount');
     numEl.classList.remove('bump');
     void numEl.offsetWidth;
     numEl.classList.add('bump');
+    // 第一次打卡庆祝
     if(oldCount === 0 && it.visitCount === 1){
         setTimeout(() => { closeDetailModal(); showCelebrate(it.shopName); }, 200);
     }
+    // 真爱店解锁
     if(oldCount < 3 && it.visitCount >= 3){
         setTimeout(() => showLoveUnlock(), 400);
     }
@@ -830,7 +968,8 @@ function toggleStatus(){
 }
 function saveDetail(){ haptic(); const arr=getList(); const it=arr.find(x=>x.id===currentDetailId); if(!it)return; it.evaluate=document.getElementById('detailEvaluate').value.trim(); saveList(arr); renderList(); }
 function saveAndCloseDetail(){ saveDetail(); closeDetailModal(); toast('已保存'); }
-function closeDetailModal(){ document.getElementById('detailModal').style.display = 'none'; }
+function closeDetailModal(){ document.getElementById('detailModal').style.display='none'; }
+
 function showFriendImport(){ document.getElementById('friendName').value=''; document.getElementById('friendText').value=''; document.getElementById('friendModal').style.display='flex'; toggleMenu(); }
 function closeFriendModal(){ document.getElementById('friendModal').style.display='none'; }
 function importFriendShare(){
@@ -845,13 +984,21 @@ function importFriendShare(){
     arr.push({id:Date.now(),city,shopName,address:addrM?addrM[1].trim():'',category:catM?catM[1].trim():'正餐',tags:tagM?tagM[1].split(/[、,，]/).map(t=>t.trim()).filter(t=>t):[],desc:descM?descM[1].trim():'',source:'friend',friendName:name,isCheckIn:false,visitCount:0,score:0,evaluate:'',dishes:[]});
     saveList(arr); closeFriendModal(); renderList(); haptic('success'); toast(`✅ 已导入${name}分享的「${shopName}」`);
 }
+
 function exportJson(){ const data=getList(); if(!data.length){toast('暂无记录');return;} const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='食迹_美食清单.json'; a.click(); toast('✅ 备份已导出'); }
 function importJson(file){ if(!file)return; const r=new FileReader(); r.onload=e=>{ try{ const data=JSON.parse(e.target.result); if(!Array.isArray(data))throw 0; const local=getList(); let add=0,skip=0; data.forEach(it=>{ if(local.find(s=>s.shopName===it.shopName&&s.city===it.city))skip++; else{local.push({...it,id:Date.now()+Math.random()});add++;} }); saveList(local); renderList(); haptic('success'); toast(`导入完成：新增${add}条，跳过${skip}条`); }catch(err){haptic('error');toast('文件解析失败');} }; r.readAsText(file); toggleMenu(); }
+
 function checkUpdate(){ toggleMenu(); if(confirm(`当前版本 ${VERSION}\n\n建议先备份再更新，更新不会丢失数据。\n\n是否立即检查更新？`)){ if('caches' in window)caches.keys().then(ks=>ks.forEach(k=>caches.delete(k))); setTimeout(()=>{location.href=location.pathname+'?v='+Date.now();},500); } }
 function showAbout(){ document.getElementById('recordCount').innerText=`共 ${getList().length} 条记录`; document.getElementById('aboutModal').style.display='flex'; toggleMenu(); }
 function closeAbout(){ document.getElementById('aboutModal').style.display='none'; }
 function showImg(src){ document.getElementById('imgModalSrc').src=src; document.getElementById('imgModal').style.display='flex'; }
 function closeImgModal(){ document.getElementById('imgModal').style.display='none'; }
+
+function fillCityTags(){
+    const cities=['全部',...new Set(getList().map(i=>i.city))]; const cur=window._cityFilter||'';
+    document.getElementById('cityTags').innerHTML=cities.map(c=>{ const active=c===cur||(c==='全部'&&!cur); return `<button class="city-chip ${active?'active':''}" onclick="haptic();filterByCity('${c}')">${c}</button>`; }).join('');
+}
+function filterByCity(c){ window._cityFilter=c==='全部'?'':c; renderList(); }
 function fillCategoryFilter(){
     const select = document.getElementById('categoryFilter');
     const currentValue = select.value;
@@ -860,11 +1007,6 @@ function fillCategoryFilter(){
     select.innerHTML = '<option value="">全部类别</option>' + allCats.map(c=>`<option value="${c}">${c}</option>`).join('');
     select.value = currentValue;
 }
-function fillCityTags(){
-    const cities=['全部',...new Set(getList().map(i=>i.city))]; const cur=window._cityFilter||'';
-    document.getElementById('cityTags').innerHTML=cities.map(c=>{ const active=c===cur||(c==='全部'&&!cur); return `<button class="city-chip ${active?'active':''}" onclick="haptic();filterByCity('${c}')">${c}</button>`; }).join('');
-}
-function filterByCity(c){ window._cityFilter=c==='全部'?'':c; renderList(); }
 function renderFilterChips(){
     const chips=[]; const cat=document.getElementById('categoryFilter').value; const sta=document.getElementById('statusFilter').value;
     const src=document.getElementById('sourceFilter').value; const city=window._cityFilter||''; const kw=document.getElementById('searchInput').value.trim();
@@ -873,6 +1015,7 @@ function renderFilterChips(){
     document.getElementById('filterChips').innerHTML=chips.length?chips.map(c=>`<span class="filter-chip">${c}</span>`).join('')+'<button class="clear-btn" onclick="haptic();clearAllFilters()">清除</button>':'';
 }
 function clearAllFilters(){ ['categoryFilter','statusFilter','sourceFilter','searchInput'].forEach(id=>document.getElementById(id).value=''); window._cityFilter=''; renderList(); }
+
 function renderList(){
     fillCategoryFilter(); fillCityTags(); renderFilterChips();
     const cat=document.getElementById('categoryFilter').value; const sta=document.getElementById('statusFilter').value;
@@ -920,22 +1063,23 @@ function renderList(){
         </div>`;
     }).join('');
 }
+
 function quickCheckIn(id){
     haptic();
     const arr=getList(); const it=arr.find(x=>x.id===id); if(!it)return;
     it.visitCount=1; it.isCheckIn=true; saveList(arr); renderList();
     setTimeout(() => showCelebrate(it.shopName), 300);
 }
+
+// 预览用示例数据
+// 注册Service Worker
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW注册失败', err));
+    });
+}
 window.onload = function(){
-    if(!getList().length){
-        const sample=[
-            {id:1,city:"长沙",shopName:"文和友老长沙龙虾馆",address:"天心区湘江中路二段36号",tags:["网红","小龙虾","排队久"],desc:"地道长沙味，小龙虾超赞，就是排队太久",category:"正餐",source:"myself",friendName:"",isCheckIn:true,visitCount:2,score:4,evaluate:"味道确实好，环境很有年代感",dishes:[{name:"口味虾",price:"¥128",reason:"招牌必点",image:""}]},
-            {id:2,city:"上海",shopName:"老盛兴汤包馆",address:"南京西路123号",tags:["本帮菜","小笼包","早餐"],desc:"皮薄馅多，汤汁鲜美，老上海味道",category:"小吃快餐",source:"myself",friendName:"",isCheckIn:true,visitCount:4,score:5,evaluate:"真爱店，每周都想去",dishes:[{name:"蟹粉小笼",price:"¥38",reason:"招牌",image:""},{name:"生煎包",price:"¥12",reason:"",image:""}]},
-            {id:3,city:"喀什",shopName:"艾力努尔烤包子",address:"古城景区附近",tags:["新疆","烤包子","老字号"],desc:"当地朋友推荐的，烤包子外酥里嫩",category:"小吃快餐",source:"friend",friendName:"小美",isCheckIn:false,visitCount:0,score:0,evaluate:"",dishes:[]},
-            {id:4,city:"长沙",shopName:"茶颜悦色",address:"五一广场店",tags:["奶茶","网红","长沙特产"],desc:"幽兰拿铁永远的神，奶油顶超好吃",category:"甜品饮品",source:"myself",friendName:"",isCheckIn:true,visitCount:6,score:5,evaluate:"去长沙必喝",dishes:[{name:"幽兰拿铁",price:"¥16",reason:"招牌",image:""},{name:"声声乌龙",price:"¥15",reason:"",image:""},{name:"抹茶葡提",price:"¥17",reason:"",image:""}]}
-        ];
-        saveList(sample);
-    }
+    importFromUrl();
     renderList();
 };
 </script>
