@@ -10,6 +10,7 @@
     <meta name="theme-color" content="#f2f2f7">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon-192.png">
     <link rel="icon" type="image/png" href="icon-192.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -1072,12 +1073,6 @@ function quickCheckIn(id){
 }
 
 // 预览用示例数据
-// 注册Service Worker
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW注册失败', err));
-    });
-}
 window.onload = function(){
     importFromUrl();
     renderList();
