@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>食迹</title>
+    <meta name="apple-mobile-web-app-title" content="食迹">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#d04b4b">
+    <link rel="apple-touch-icon" href="https://i.hd-r.cn/e733e475-4b60-450a-868b-5e57977c9c65.png">
+    <link rel="icon" type="image/png" href="https://i.hd-r.cn/e733e475-4b60-450a-868b-5e57977c9c65.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        body { background-color: #f7f7f7; padding-top: env(safe-area-inset-top, 60px); padding-left: 16px; padding-right: 16px; padding-bottom: 80px; max-width: 900px; margin: 0 auto; }
+        .header { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; position: sticky; top: 0; background: #f7f7f7; z-index: 100; }
+        .header h1 { font-size: 24px; color: #d04b4b; display: flex; align-items: center; gap: 8px; }
+        .menu-btn { background: none; border: none; font-size: 24px; cursor: pointer; padding: 8px; }
+        .search-box { width: 100%; padding: 12px 16px; border: 1px solid #e0e0e0; border-radius: 12px; font-size: 16px; margin-bottom: 12px; background: #fff; }
+        .filter-card { background: #fff; border-radius: 12px; padding: 12px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+        .filter-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+        .filter-select { padding: 10px 8px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; background: #fff; width: 100%; }
+        .city-tags { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+        .city-tag { padding: 6px 16px; border-radius: 20px; background: #eee; border: none; font-size: 14px; white-space: nowrap; cursor: pointer; }
+        .city-tag.active { background: #d04b4b; color: #fff; }
+        .filter-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; align-items: center; }
+        .filter-chip { padding: 4px 10px; background: #ffe8e8; color: #b83838; border-radius: 12px; font-size: 12px; }
+        .clear-btn { background: none; border: none; color: #888; font-size: 13px; cursor: pointer; margin-left: auto; }
+        .food-item { background: #fff; border-radius: 14px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); position: relative; border: 2px solid transparent; }
+        .food-item.checked-in { background: #f0fcf4; border-color: #b2e2c4; }
+        .food-item.friend-share { border-left: 4px solid #8b5cf6; }
+        .food-item-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        .food-item h3 { font-size: 18px; color: #c23c3c; margin-bottom: 4px; padding-right: 8px; }
+        .badge-group { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; flex-shrink: 0; }
+        .badge { padding: 4px 10px; border-radius: 12px; font-size: 12px; white-space: nowrap; }
+        .badge.love { background: #fff3e0; color: #e65100; }
+        .badge.checkin { background: #c7f0d8; color: #1c7c3e; }
+        .badge.seed { background: #e8f5e9; color: #2e7d32; }
+        .badge.friend { background: #f3e8ff; color: #7c3aed; }
+        .food-meta { color: #666; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .category-tag { background: #e3f2fd; color: #1565c0; padding: 2px 8px; border-radius: 8px; font-size: 12px; }
+        .stars { display: flex; gap: 2px; margin: 8px 0; align-items: center; }
+        .star { font-size: 22px; color: #ccc; cursor: pointer; }
+        .star.active { color: #ffbc00; }
+        .score-text { margin-left: 8px; color: #ff9800; font-size: 16px; font-weight: 600; }
+        .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+        .tag { background: #ffe8e8; color: #b83838; font-size: 12px; padding: 3px 10px; border-radius: 12px; }
+        .desc { color: #555; font-size: 14px; line-height: 1.5; margin: 8px 0; white-space: pre-line; }
+        .dishes { margin: 8px 0; padding: 8px; background: #fafafa; border-radius: 8px; }
+        .dish-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 14px; }
+        .dish-img { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; cursor: pointer; }
+        .dish-name { flex: 1; }
+        .dish-price { color: #d04b4b; font-weight: 600; }
+        .btn-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+        .btn { flex: 1; min-width: 90px; padding: 12px; border: none; border-radius: 10px; font-size: 15px; cursor: pointer; font-weight: 500; }
+        .btn-primary { background: #d04b4b; color: #fff; }
+        .btn-success { background: #279e68; color: #fff; }
+        .btn-info { background: #2b7cd3; color: #fff; }
+        .btn-warning { background: #ff8822; color: #fff; }
+        .btn-secondary { background: #eee; color: #555; }
+        .btn-outline { background: #fff; border: 1px solid #ddd; color: #555; }
+        .del-btn { position: absolute; top: 12px; right: 12px; background: #f5f5f5; color: #999; border: none; font-size: 12px; padding: 4px 10px; border-radius: 6px; cursor: pointer; }
+        .fab { position: fixed; bottom: 24px; right: 24px; width: 60px; height: 60px; border-radius: 50%; background: #d04b4b; color: #fff; font-size: 28px; border: none; box-shadow: 0 4px 12px rgba(208,75,75,0.4); cursor: pointer; z-index: 200; }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 16px; }
+        .modal { background: #fff; border-radius: 16px; padding: 20px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+        .modal h2 { text-align: center; margin-bottom: 16px; color: #333; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 14px; color: #555; margin-bottom: 4px; font-weight: 500; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; }
+        .seg-control { display: flex; background: #f0f0f0; border-radius: 10px; padding: 4px; margin-bottom: 12px; }
+        .seg-btn { flex: 1; padding: 10px; border: none; background: transparent; border-radius: 8px; font-size: 14px; cursor: pointer; }
+        .seg-btn.active { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); font-weight: 600; color: #d04b4b; }
+        .recommend-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+        .rec-tag { padding: 6px 12px; background: #f0f0f0; border-radius: 16px; font-size: 13px; cursor: pointer; border: none; }
+        .highlight-word { background-color: #ffdd70; padding: 0 2px; border-radius: 2px; }
+        .empty-state { text-align: center; padding: 40px 20px; color: #999; }
+        .menu-dropdown { position: absolute; top: 56px; right: 0; background: #fff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); padding: 8px 0; min-width: 180px; z-index: 300; }
+        .menu-item { padding: 12px 16px; font-size: 15px; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+        .menu-item:hover { background: #f5f5f5; }
+        .menu-divider { height: 1px; background: #eee; margin: 4px 0; }
+        .visit-count-row { display: flex; align-items: center; justify-content: center; gap: 16px; background: #f0fcf4; padding: 12px; border-radius: 10px; margin-bottom: 16px; }
+        .count-btn { width: 36px; height: 36px; border-radius: 50%; border: none; background: #e8e8e8; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .count-num { font-size: 24px; font-weight: 700; color: #279e68; min-width: 40px; text-align: center; }
+        .img-modal { max-width: 90%; max-height: 90%; border-radius: 12px; }
+        .version-info { text-align: center; color: #999; font-size: 13px; margin-top: 12px; }
+        .dish-form { background: #f9f9f9; padding: 12px; border-radius: 8px; margin-bottom: 8px; }
+        .add-dish-btn { background: none; border: 1px dashed #ccc; color: #888; padding: 8px; width: 100%; border-radius: 8px; cursor: pointer; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🍜 食迹</h1>
+        <button class="menu-btn" onclick="toggleMenu()">⋯</button>
+        <div class="menu-dropdown" id="menuDropdown" style="display:none;">
+            <div class="menu-item" onclick="exportJson()">📤 导出备份</div>
+            <div class="menu-item" onclick="document.getElementById('importFile').click()">📥 导入备份</div>
+            <div class="menu-item" onclick="showFriendImport()">👥 导入好友分享</div>
+            <div class="menu-divider"></div>
+            <div class="menu-item" onclick="checkUpdate()">🔄 检查更新</div>
+            <div class="menu-item" onclick="showAbout()">ℹ️ 关于食迹</div>
+        </div>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJson(this.files[0])">
+    </div>
+
+    <input type="text" class="search-box" id="searchInput" placeholder="🔍 搜索店铺名、标签、地址、理由..." oninput="renderList()">
+
+    <div class="filter-card">
+        <div class="filter-row">
+            <select class="filter-select" id="categoryFilter" onchange="renderList()">
+                <option value="">全部类别</option>
+                <option value="正餐">正餐</option>
+                <option value="小吃快餐">小吃快餐</option>
+                <option value="火锅烧烤">火锅烧烤</option>
+                <option value="甜品饮品">甜品饮品</option>
+                <option value="面包烘焙">面包烘焙</option>
+                <option value="日韩料理">日韩料理</option>
+                <option value="西餐">西餐</option>
+                <option value="东南亚菜">东南亚菜</option>
+                <option value="地方特色">地方特色</option>
+                <option value="零食特产">零食特产</option>
+                <option value="其他">其他</option>
+            </select>
+            <select class="filter-select" id="statusFilter" onchange="renderList()">
+                <option value="">全部状态</option>
+                <option value="seed">🌱 种草收藏</option>
+                <option value="visited">✅ 已去过</option>
+            </select>
+            <select class="filter-select" id="sourceFilter" onchange="renderList()">
+                <option value="">全部来源</option>
+                <option value="myself">🙋 我的收藏</option>
+                <option value="friend">👤 好友分享</option>
+            </select>
+        </div>
+        <div class="city-tags" id="cityTags"></div>
+        <div class="filter-chips" id="filterChips"></div>
+    </div>
+
+    <div id="listWrap"></div>
+
+    <button class="fab" onclick="showAddModal()">+</button>
+
+    <div class="modal-overlay" id="addModal" style="display:none;">
+        <div class="modal">
+            <h2 id="modalTitle">新增美食</h2>
+            <div class="seg-control">
+                <button class="seg-btn active" id="segSeed" onclick="setFormStatus('seed')">🌱 种草收藏</button>
+                <button class="seg-btn" id="segVisited" onclick="setFormStatus('visited')">✅ 已去过</button>
+            </div>
+            <div class="form-group">
+                <label>城市 *</label>
+                <input type="text" id="formCity" placeholder="例：长沙、喀什">
+            </div>
+            <div class="form-group">
+                <label>店铺名称 *</label>
+                <input type="text" id="formShopName" placeholder="店铺名称" oninput="showRecommendTags()">
+            </div>
+            <div class="recommend-tags" id="recommendTags"></div>
+            <div class="form-group">
+                <label>类别</label>
+                <select id="formCategory">
+                    <option value="正餐">正餐</option>
+                    <option value="小吃快餐">小吃快餐</option>
+                    <option value="火锅烧烤">火锅烧烤</option>
+                    <option value="甜品饮品">甜品饮品</option>
+                    <option value="面包烘焙">面包烘焙</option>
+                    <option value="日韩料理">日韩料理</option>
+                    <option value="西餐">西餐</option>
+                    <option value="东南亚菜">东南亚菜</option>
+                    <option value="地方特色">地方特色</option>
+                    <option value="零食特产">零食特产</option>
+                    <option value="其他">其他</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>地址（用于导航）</label>
+                <div style="display:flex;gap:8px;">
+                    <input type="text" id="formAddress" placeholder="详细地址" style="flex:1;">
+                    <button class="btn btn-outline" style="flex:none;padding:10px 12px;" onclick="autoFillAddress()">搜索地址</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>标签（逗号分隔）</label>
+                <input type="text" id="formTags" placeholder="烧烤,小吃,老字号">
+            </div>
+            <div class="form-group">
+                <label>推荐理由</label>
+                <textarea id="formDesc" rows="2" placeholder="推荐理由、刷到的笔记要点"></textarea>
+            </div>
+            <div class="form-group">
+                <label>特色菜品</label>
+                <div id="dishFormList"></div>
+                <button class="add-dish-btn" onclick="addDishForm()">+ 添加菜品</button>
+            </div>
+            <div class="form-group" id="evalGroup" style="display:none;">
+                <label>打卡评价</label>
+                <textarea id="formEvaluate" rows="2" placeholder="写下你的用餐体验"></textarea>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-secondary" onclick="closeAddModal()">取消</button>
+                <button class="btn btn-primary" onclick="saveFood()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="detailModal" style="display:none;">
+        <div class="modal">
+            <h2 id="detailTitle"></h2>
+            <p style="text-align:center;color:#888;margin-bottom:16px;" id="detailAddr"></p>
+            <div class="visit-count-row">
+                <span id="detailStatusBadge"></span>
+                <span id="loveBadge" style="display:none;" class="badge love">🔥 真爱店</span>
+                <button class="count-btn" onclick="adjustCount(-1)">−</button>
+                <span class="count-num" id="detailCount">0</span>
+                <span style="color:#666;">次</span>
+                <button class="count-btn" onclick="adjustCount(1)">+</button>
+            </div>
+            <div style="margin-bottom:16px;">
+                <label style="font-size:14px;color:#555;font-weight:500;">星级评分</label>
+                <div class="stars" id="detailStars"></div>
+            </div>
+            <div class="form-group">
+                <label>打卡评价</label>
+                <textarea id="detailEvaluate" rows="3" placeholder="写下你的用餐体验"></textarea>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-outline" onclick="toggleStatus()">↩️ 改回想去</button>
+                <button class="btn btn-success" onclick="addVisit()">+ 再去一次</button>
+                <button class="btn btn-primary" onclick="saveDetail()">保存评价</button>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-secondary" onclick="closeDetailModal()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="friendModal" style="display:none;">
+        <div class="modal">
+            <h2>导入好友分享</h2>
+            <div class="form-group">
+                <label>好友昵称</label>
+                <input type="text" id="friendName" placeholder="这是哪位好友分享的？">
+            </div>
+            <div class="form-group">
+                <label>粘贴好友分享的文本</label>
+                <textarea id="friendText" rows="6" placeholder="粘贴好友发给你的分享文本..."></textarea>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-secondary" onclick="closeFriendModal()">取消</button>
+                <button class="btn btn-primary" onclick="importFriendShare()">导入</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="aboutModal" style="display:none;">
+        <div class="modal" style="text-align:center;">
+            <h2>🍜 食迹</h2>
+            <img src="https://i.hd-r.cn/e733e475-4b60-450a-868b-5e57977c9c65.png" style="width:80px;height:80px;border-radius:18px;margin:16px 0;">
+            <p style="color:#666;margin-bottom:8px;">记录每一次美食探店</p>
+            <p class="version-info">版本 v1.2.0</p>
+            <p class="version-info" id="recordCount">共 0 条记录</p>
+            <p class="version-info">数据保存在本地，请定期导出备份</p>
+            <div class="btn-row" style="margin-top:20px;">
+                <button class="btn btn-primary" onclick="checkUpdate()">🔄 检查更新</button>
+                <button class="btn btn-secondary" onclick="closeAbout()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="imgModal" style="display:none;" onclick="closeImgModal()">
+        <img class="img-modal" id="imgModalSrc">
+    </div>
+
+<script>
+const STORAGE_KEY = "my_food_collection";
+const VERSION = "v1.2.0";
+let currentEditId = null;
+let currentDetailId = null;
+let formStatus = 'seed';
+let dishForms = [];
+
+function getList(){
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return [];
+    try {
+        const arr = JSON.parse(raw);
+        return arr.map(item => ({
+            ...item,
+            category: item.category || '正餐',
+            source: item.source || 'myself',
+            friendName: item.friendName || '',
+            visitCount: item.visitCount !== undefined ? item.visitCount : (item.isCheckIn ? 1 : 0),
+            score: item.score || 0,
+            evaluate: item.evaluate || '',
+            dishes: item.dishes || []
+        }));
+    } catch(e) { return []; }
+}
+
+function saveList(arr){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+}
+
+function highlightText(text, keyword){
+    if(!keyword || !text) return text;
+    const reg = new RegExp(`(${keyword.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,"gi");
+    return text.replace(reg,'<span class="highlight-word">$1</span>');
+}
+
+function toggleMenu(){
+    const m = document.getElementById('menuDropdown');
+    m.style.display = m.style.display === 'none' ? 'block' : 'none';
+}
+document.addEventListener('click', (e) => {
+    if(!e.target.closest('.header')) document.getElementById('menuDropdown').style.display = 'none';
+});
+
+function showAddModal(){
+    currentEditId = null;
+    formStatus = 'seed';
+    dishForms = [];
+    document.getElementById('modalTitle').innerText = '新增美食';
+    document.getElementById('formCity').value = '';
+    document.getElementById('formShopName').value = '';
+    document.getElementById('formAddress').value = '';
+    document.getElementById('formTags').value = '';
+    document.getElementById('formDesc').value = '';
+    document.getElementById('formEvaluate').value = '';
+    document.getElementById('formCategory').value = '正餐';
+    setFormStatus('seed');
+    renderDishForms();
+    document.getElementById('addModal').style.display = 'flex';
+}
+
+function closeAddModal(){
+    document.getElementById('addModal').style.display = 'none';
+}
+
+function setFormStatus(status){
+    formStatus = status;
+    document.getElementById('segSeed').classList.toggle('active', status === 'seed');
+    document.getElementById('segVisited').classList.toggle('active', status === 'visited');
+    document.getElementById('evalGroup').style.display = status === 'visited' ? 'block' : 'none';
+}
+
+function showRecommendTags(){
+    const name = document.getElementById('formShopName').value;
+    const category = document.getElementById('formCategory').value;
+    let recs = [];
+    if(name.includes('火锅') || name.includes('涮')) recs.push('火锅','适合聚餐','排队久');
+    if(name.includes('烧烤') || name.includes('烤')) recs.push('烧烤','夜宵');
+    if(name.includes('奶茶') || name.includes('茶')) recs.push('奶茶','甜品饮品');
+    if(name.includes('咖啡')) recs.push('咖啡','环境好');
+    if(name.includes('面') || name.includes('粉')) recs.push('面馆','小吃','早餐');
+    if(name.includes('包') || name.includes('饺')) recs.push('包子','饺子','早餐');
+    if(name.includes('寿司') || name.includes('日') || name.includes('居酒')) recs.push('日料');
+    if(category === '火锅烧烤') recs.push('适合聚餐','需预约');
+    if(category === '甜品饮品') recs.push('网红','适合约会');
+    recs = [...new Set(recs)].slice(0,6);
+    const container = document.getElementById('recommendTags');
+    if(recs.length === 0){ container.innerHTML = ''; return; }
+    container.innerHTML = recs.map(t => `<button class="rec-tag" onclick="addTag('${t}')">+ ${t}</button>`).join('');
+}
+
+function addTag(tag){
+    const input = document.getElementById('formTags');
+    const current = input.value.trim();
+    input.value = current ? current + ',' + tag : tag;
+}
+
+function addDishForm(){
+    dishForms.push({name:'', price:'', reason:'', image:''});
+    renderDishForms();
+}
+
+function removeDishForm(i){
+    dishForms.splice(i,1);
+    renderDishForms();
+}
+
+function renderDishForms(){
+    const container = document.getElementById('dishFormList');
+    container.innerHTML = dishForms.map((d,i) => `
+        <div class="dish-form">
+            <div style="display:flex;gap:8px;margin-bottom:6px;">
+                <input type="text" placeholder="菜名" value="${d.name}" onchange="dishForms[${i}].name=this.value" style="flex:1;">
+                <input type="text" placeholder="价格" value="${d.price}" onchange="dishForms[${i}].price=this.value" style="width:80px;">
+                <button onclick="removeDishForm(${i})" style="background:#fee;color:#c33;border:none;padding:0 10px;border-radius:6px;cursor:pointer;">×</button>
+            </div>
+            <input type="text" placeholder="推荐理由（可选）" value="${d.reason}" onchange="dishForms[${i}].reason=this.value" style="width:100%;margin-bottom:6px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+                ${d.image ? `<img src="${d.image}" style="width:50px;height:50px;border-radius:6px;object-fit:cover;">` : ''}
+                <button onclick="document.getElementById('dishImg${i}').click()" class="btn btn-outline" style="flex:none;padding:6px 12px;font-size:13px;">📷 拍照/上传</button>
+                <input type="file" id="dishImg${i}" accept="image/*" capture="environment" style="display:none" onchange="handleDishImg(${i}, this.files[0])">
+            </div>
+        </div>
+    `).join('');
+}
+
+function handleDishImg(index, file){
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const maxW = 800;
+            const scale = Math.min(1, maxW / img.width);
+            canvas.width = img.width * scale;
+            canvas.height = img.height * scale;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            dishForms[index].image = canvas.toDataURL('image/jpeg', 0.7);
+            renderDishForms();
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+function autoFillAddress(){
+    const city = document.getElementById('formCity').value.trim();
+    const shopName = document.getElementById('formShopName').value.trim();
+    if(!city || !shopName){ alert('请先填写城市和店铺名称'); return; }
+    document.getElementById('formAddress').value = `${city} ${shopName}`;
+    const url = `https://maps.apple.com/?q=${encodeURIComponent(city + ' ' + shopName)}`;
+    window.open(url, '_blank');
+    alert('已为你打开地图搜索，复制完整地址回来粘贴，导航更精准');
+}
+
+function saveFood(){
+    const city = document.getElementById('formCity').value.trim();
+    const shopName = document.getElementById('formShopName').value.trim();
+    const address = document.getElementById('formAddress').value.trim();
+    const tagsStr = document.getElementById('formTags').value.trim();
+    const desc = document.getElementById('formDesc').value.trim();
+    const category = document.getElementById('formCategory').value;
+    const evaluate = document.getElementById('formEvaluate').value.trim();
+    if(!city || !shopName){ alert('请填写城市和店铺名称'); return; }
+    const tags = tagsStr.split(/[,，]/).map(t=>t.trim()).filter(t=>t);
+    const arr = getList();
+    const visitCount = formStatus === 'visited' ? 1 : 0;
+    if(currentEditId){
+        const item = arr.find(x=>x.id === currentEditId);
+        if(item){
+            Object.assign(item, {city, shopName, address, tags, desc, category, evaluate, visitCount, dishes: dishForms});
+        }
+    } else {
+        arr.push({
+            id: Date.now(),
+            city, shopName, address, tags, desc, category,
+            source: 'myself', friendName: '',
+            isCheckIn: formStatus === 'visited',
+            visitCount, score: 0, evaluate,
+            dishes: dishForms
+        });
+    }
+    saveList(arr);
+    closeAddModal();
+    renderList();
+    alert('✅ 保存成功！');
+}
+
+function editFood(id){
+    const item = getList().find(x=>x.id === id);
+    if(!item) return;
+    currentEditId = id;
+    formStatus = item.visitCount > 0 ? 'visited' : 'seed';
+    dishForms = JSON.parse(JSON.stringify(item.dishes || []));
+    document.getElementById('modalTitle').innerText = '编辑美食';
+    document.getElementById('formCity').value = item.city;
+    document.getElementById('formShopName').value = item.shopName;
+    document.getElementById('formAddress').value = item.address || '';
+    document.getElementById('formTags').value = (item.tags || []).join(',');
+    document.getElementById('formDesc').value = item.desc || '';
+    document.getElementById('formCategory').value = item.category || '正餐';
+    document.getElementById('formEvaluate').value = item.evaluate || '';
+    setFormStatus(formStatus);
+    renderDishForms();
+    document.getElementById('addModal').style.display = 'flex';
+}
+
+function delItem(id){
+    if(!confirm('确定删除这条记录吗？')) return;
+    let arr = getList();
+    arr = arr.filter(x=>x.id !== id);
+    saveList(arr);
+    renderList();
+}
+
+function openMapNavi(address, shopName, city){
+    const query = address || `${city} ${shopName}`;
+    if(!query){ alert('没有地址信息'); return; }
+    const url = `https://maps.apple.com/?q=${encodeURIComponent(query)}`;
+    window.open(url, '_blank');
+}
+
+function shareItem(id){
+    const item = getList().find(x=>x.id === id);
+    if(!item) return;
+    const text = `【食迹分享】\n🍜 ${item.shopName}\n📍 ${item.city}${item.address ? ' · ' + item.address : ''}\n🏷️ 类别：${item.category}\n${item.tags && item.tags.length ? '标签：' + item.tags.join('、') + '\n' : ''}${item.desc ? '推荐理由：' + item.desc + '\n' : ''}${item.visitCount > 0 ? `✅ 已打卡${item.visitCount}次，评分${item.score}星` : '🌱 种草收藏'}`;
+    if(navigator.share){
+        navigator.share({title:'食迹分享', text}).catch(()=>{});
+    } else {
+        navigator.clipboard.writeText(text).then(()=>alert('分享文本已复制，粘贴给好友即可'));
+    }
+}
+
+function convertToMine(id){
+    const arr = getList();
+    const item = arr.find(x=>x.id === id);
+    if(!item) return;
+    item.source = 'myself';
+    item.friendName = '';
+    saveList(arr);
+    renderList();
+    alert('已转为我的收藏');
+}
+
+function showDetail(id){
+    const item = getList().find(x=>x.id === id);
+    if(!item) return;
+    currentDetailId = id;
+    document.getElementById('detailTitle').innerText = item.shopName;
+    document.getElementById('detailAddr').innerText = `${item.city} · ${item.address || '未填写地址'}`;
+    document.getElementById('detailCount').innerText = item.visitCount;
+    document.getElementById('detailEvaluate').value = item.evaluate || '';
+    updateDetailUI();
+    document.getElementById('detailModal').style.display = 'flex';
+}
+
+function updateDetailUI(){
+    const item = getList().find(x=>x.id === currentDetailId);
+    if(!item) return;
+    document.getElementById('detailCount').innerText = item.visitCount;
+    document.getElementById('loveBadge').style.display = item.visitCount >= 3 ? 'inline-block' : 'none';
+    document.getElementById('detailStatusBadge').innerHTML = item.visitCount > 0
+        ? '<span class="badge checkin">✅ 已去过</span>'
+        : '<span class="badge seed">🌱 种草</span>';
+    const stars = document.getElementById('detailStars');
+    stars.innerHTML = '';
+    for(let i=1;i<=5;i++){
+        const s = document.createElement('span');
+        s.className = 'star' + (item.score >= i ? ' active' : '');
+        s.innerText = '★';
+        s.onclick = () => setScore(i);
+        stars.appendChild(s);
+    }
+    const scoreText = document.createElement('span');
+    scoreText.className = 'score-text';
+    scoreText.innerText = item.score > 0 ? item.score + '.0' : '未评分';
+    stars.appendChild(scoreText);
+}
+
+function setScore(score){
+    const arr = getList();
+    const item = arr.find(x=>x.id === currentDetailId);
+    if(!item) return;
+    item.score = score;
+    saveList(arr);
+    updateDetailUI();
+    renderList();
+}
+
+function adjustCount(delta){
+    const arr = getList();
+    const item = arr.find(x=>x.id === currentDetailId);
+    if(!item) return;
+    item.visitCount = Math.max(0, item.visitCount + delta);
+    item.isCheckIn = item.visitCount > 0;
+    saveList(arr);
+    updateDetailUI();
+    renderList();
+}
+
+function addVisit(){
+    adjustCount(1);
+}
+
+function toggleStatus(){
+    const arr = getList();
+    const item = arr.find(x=>x.id === currentDetailId);
+    if(!item) return;
+    if(item.visitCount > 0){
+        if(confirm('确定改回想去吗？打卡次数会清零')){
+            item.visitCount = 0;
+            item.isCheckIn = false;
+        }
+    } else {
+        item.visitCount = 1;
+        item.isCheckIn = true;
+    }
+    saveList(arr);
+    updateDetailUI();
+    renderList();
+}
+
+function saveDetail(){
+    const arr = getList();
+    const item = arr.find(x=>x.id === currentDetailId);
+    if(!item) return;
+    item.evaluate = document.getElementById('detailEvaluate').value.trim();
+    saveList(arr);
+    renderList();
+    alert('评价已保存');
+}
+
+function closeDetailModal(){
+    document.getElementById('detailModal').style.display = 'none';
+}
+
+function showFriendImport(){
+    document.getElementById('friendName').value = '';
+    document.getElementById('friendText').value = '';
+    document.getElementById('friendModal').style.display = 'flex';
+    toggleMenu();
+}
+
+function closeFriendModal(){
+    document.getElementById('friendModal').style.display = 'none';
+}
+
+function importFriendShare(){
+    const name = document.getElementById('friendName').value.trim();
+    const text = document.getElementById('friendText').value.trim();
+    if(!name || !text){ alert('请填写好友昵称和分享文本'); return; }
+    const shopMatch = text.match(/🍜\s*(.+)/);
+    const cityMatch = text.match(/📍\s*([^·\n]+)/);
+    const addrMatch = text.match(/·\s*([^\n]+)/);
+    const catMatch = text.match(/类别：([^\n]+)/);
+    const tagMatch = text.match(/标签：([^\n]+)/);
+    const descMatch = text.match(/推荐理由：([\s\S]*?)(?:\n✅|\n🌱|$)/);
+    if(!shopMatch){ alert('无法解析分享文本，请确认格式正确'); return; }
+    const arr = getList();
+    const city = cityMatch ? cityMatch[1].trim() : '未知';
+    const shopName = shopMatch[1].trim();
+    const exist = arr.find(s=>s.shopName === shopName && s.city === city);
+    if(exist){
+        if(!confirm(`已存在「${shopName}」，仍要导入为好友分享吗？`)) return;
+    }
+    arr.push({
+        id: Date.now(),
+        city, shopName,
+        address: addrMatch ? addrMatch[1].trim() : '',
+        category: catMatch ? catMatch[1].trim() : '正餐',
+        tags: tagMatch ? tagMatch[1].split(/[、,，]/).map(t=>t.trim()).filter(t=>t) : [],
+        desc: descMatch ? descMatch[1].trim() : '',
+        source: 'friend', friendName: name,
+        isCheckIn: false, visitCount: 0, score: 0, evaluate: '', dishes: []
+    });
+    saveList(arr);
+    closeFriendModal();
+    renderList();
+    alert(`✅ 已导入${name}分享的「${shopName}」`);
+}
+
+function exportJson(){
+    const data = getList();
+    if(data.length === 0){ alert('暂无记录'); return; }
+    const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = '食迹_美食清单.json';
+    a.click();
+}
+
+function importJson(file){
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        try{
+            const importData = JSON.parse(e.target.result);
+            if(!Array.isArray(importData)) throw 0;
+            const local = getList();
+            let added = 0, skipped = 0;
+            importData.forEach(item => {
+                const exist = local.find(s=>s.shopName === item.shopName && s.city === item.city);
+                if(!exist){
+                    local.push({...item, id: Date.now() + Math.random()});
+                    added++;
+                } else skipped++;
+            });
+            saveList(local);
+            renderList();
+            alert(`导入完成：新增${added}条，跳过${skipped}条重复`);
+        }catch(err){
+            alert('文件解析失败，请确认是食迹的JSON备份');
+        }
+    };
+    reader.readAsText(file);
+    toggleMenu();
+}
+
+function checkUpdate(){
+    toggleMenu();
+    if(confirm(`当前版本 ${VERSION}\n\n建议先备份再更新，更新不会丢失数据。\n\n是否立即检查更新？`)){
+        if('caches' in window){
+            caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
+        }
+        setTimeout(()=>{
+            window.location.href = location.pathname + '?v=' + Date.now();
+        }, 500);
+    }
+}
+
+function showAbout(){
+    document.getElementById('recordCount').innerText = `共 ${getList().length} 条记录`;
+    document.getElementById('aboutModal').style.display = 'flex';
+    toggleMenu();
+}
+
+function closeAbout(){
+    document.getElementById('aboutModal').style.display = 'none';
+}
+
+function showImg(src){
+    document.getElementById('imgModalSrc').src = src;
+    document.getElementById('imgModal').style.display = 'flex';
+}
+
+function closeImgModal(){
+    document.getElementById('imgModal').style.display = 'none';
+}
+
+function fillCityTags(){
+    const container = document.getElementById('cityTags');
+    const all = getList();
+    const cities = ['全部', ...new Set(all.map(i=>i.city))];
+    const currentCity = window._cityFilter || '';
+    container.innerHTML = cities.map(c => {
+        const active = c === currentCity || (c === '全部' && !currentCity);
+        return `<button class="city-tag ${active ? 'active' : ''}" onclick="filterByCity('${c}')">${c}</button>`;
+    }).join('');
+}
+
+function filterByCity(city){
+    window._cityFilter = city === '全部' ? '' : city;
+    renderList();
+}
+
+function renderFilterChips(){
+    const container = document.getElementById('filterChips');
+    const chips = [];
+    const cat = document.getElementById('categoryFilter').value;
+    const sta = document.getElementById('statusFilter').value;
+    const src = document.getElementById('sourceFilter').value;
+    const city = window._cityFilter || '';
+    const kw = document.getElementById('searchInput').value.trim();
+    if(cat) chips.push(`类别：${cat}`);
+    if(sta) chips.push(`状态：${sta === 'seed' ? '种草' : '已去过'}`);
+    if(src) chips.push(`来源：${src === 'myself' ? '我的收藏' : '好友分享'}`);
+    if(city) chips.push(`城市：${city}`);
+    if(kw) chips.push(`搜索：${kw}`);
+    if(chips.length === 0){ container.innerHTML = ''; return; }
+    container.innerHTML = chips.map(c => `<span class="filter-chip">${c}</span>`).join('') +
+        '<button class="clear-btn" onclick="clearAllFilters()">↻ 清除筛选</button>';
+}
+
+function clearAllFilters(){
+    document.getElementById('categoryFilter').value = '';
+    document.getElementById('statusFilter').value = '';
+    document.getElementById('sourceFilter').value = '';
+    document.getElementById('searchInput').value = '';
+    window._cityFilter = '';
+    renderList();
+}
+
+function renderList(){
+    fillCityTags();
+    renderFilterChips();
+    const cat = document.getElementById('categoryFilter').value;
+    const sta = document.getElementById('statusFilter').value;
+    const src = document.getElementById('sourceFilter').value;
+    const city = window._cityFilter || '';
+    const keyword = document.getElementById('searchInput').value.trim();
+    const kwLow = keyword.toLowerCase();
+    let data = getList();
+    if(cat) data = data.filter(d=>d.category === cat);
+    if(sta) data = data.filter(d=> sta === 'seed' ? d.visitCount === 0 : d.visitCount > 0);
+    if(src) data = data.filter(d=>d.source === src);
+    if(city) data = data.filter(d=>d.city === city);
+    if(kwLow){
+        data = data.filter(d=>{
+            const tagStr = (d.tags||[]).join(' ').toLowerCase();
+            return d.shopName.toLowerCase().includes(kwLow)
+                || tagStr.includes(kwLow)
+                || (d.desc||'').toLowerCase().includes(kwLow)
+                || (d.address||'').toLowerCase().includes(kwLow);
+        });
+    }
+    const wrap = document.getElementById('listWrap');
+    if(data.length === 0){
+        wrap.innerHTML = '<div class="empty-state">🍽️ 没有匹配的记录<br><small>试试清除筛选或添加新美食</small></div>';
+        return;
+    }
+    let html = '';
+    data.forEach(item=>{
+        const tagHtml = (item.tags||[]).map(t=>`<span class="tag">${highlightText(t,keyword)}</span>`).join('');
+        const isVisited = item.visitCount > 0;
+        const isLove = item.visitCount >= 3;
+        const dishesHtml = (item.dishes||[]).slice(0,3).map(d => `
+            <div class="dish-item">
+                ${d.image ? `<img src="${d.image}" class="dish-img" onclick="showImg('${d.image}')">` : ''}
+                <span class="dish-name">${d.name}</span>
+                ${d.price ? `<span class="dish-price">${d.price}</span>` : ''}
+            </div>
+        `).join('');
+        const moreDishes = (item.dishes||[]).length > 3 ? `<div style="font-size:12px;color:#999;padding:4px 0;">还有 ${item.dishes.length - 3} 道菜</div>` : '';
+        html += `
+        <div class="food-item ${isVisited?'checked-in':''} ${item.source==='friend'?'friend-share':''}">
+            <button class="del-btn" onclick="delItem(${item.id})">删除</button>
+            <div class="food-item-header">
+                <div style="flex:1;">
+                    <h3 onclick="editFood(${item.id})" style="cursor:pointer;">${highlightText(item.shopName,keyword)}</h3>
+                    <div class="food-meta">
+                        <span class="category-tag">${item.category}</span>
+                        <span>📍 ${highlightText(item.city,keyword)} · ${highlightText(item.address||'未填写地址',keyword)}</span>
+                    </div>
+                </div>
+                <div class="badge-group">
+                    ${item.source === 'friend' ? `<span class="badge friend">👤 ${item.friendName}分享</span>` : ''}
+                    ${isLove ? '<span class="badge love">🔥 真爱店</span>' : ''}
+                    <span class="badge ${isVisited?'checkin':'seed'}">${isVisited ? `已打卡 ${item.visitCount} 次` : '🌱 种草'}</span>
+                </div>
+            </div>
+            <div class="stars">
+                ${[1,2,3,4,5].map(i=>`<span class="star ${item.score>=i?'active':''}">★</span>`).join('')}
+                <span class="score-text">${item.score > 0 ? item.score + '.0' : '未评分'}</span>
+            </div>
+            <div class="tags">${tagHtml}</div>
+            <div class="desc">${highlightText(item.desc||'无备注',keyword)}</div>
+            ${(item.dishes||[]).length > 0 ? `<div class="dishes">${dishesHtml}${moreDishes}</div>` : ''}
+            <div class="btn-row">
+                ${isVisited
+                    ? `<button class="btn btn-success" onclick="showDetail(${item.id})">✏️ 打卡详情</button>`
+                    : `<button class="btn btn-primary" onclick="quickCheckIn(${item.id})">✅ 打卡去过</button>`}
+                <button class="btn btn-warning" onclick="openMapNavi('${(item.address||'').replace(/'/g,"\\'")}','${item.shopName.replace(/'/g,"\\'")}','${item.city.replace(/'/g,"\\'")}')">🧭 去导航</button>
+                <button class="btn btn-outline" onclick="shareItem(${item.id})">📤 分享</button>
+            </div>
+            ${item.source === 'friend' ? `<div class="btn-row"><button class="btn btn-info" onclick="convertToMine(${item.id})">⭐ 转为我的收藏</button></div>` : ''}
+        </div>`;
+    });
+    wrap.innerHTML = html;
+}
+
+function quickCheckIn(id){
+    const arr = getList();
+    const item = arr.find(x=>x.id === id);
+    if(!item) return;
+    item.visitCount = 1;
+    item.isCheckIn = true;
+    saveList(arr);
+    renderList();
+    showDetail(id);
+}
+
+window.onload = renderList;
+</script>
+</body>
+</html>
